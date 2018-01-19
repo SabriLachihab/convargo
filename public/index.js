@@ -145,6 +145,50 @@ const actors = [{
   }]
 }];
 
+
+var price = [0,0,0];
+var commission = [[0,0,0],[0,0,0],[0,0,0]];
+for (var i=0;i<3;i++)
+{
+  var truck_info = truck_price(deliveries[i].truckerId)
+  //first step
+  if(deliveries[i].volume>25)
+  {
+    truck_info[1] = truck_info[1] - truck_info[1]*0.5
+  }
+  else if(deliveries[i].volume>10){
+    truck_info[1] = truck_info[1] - truck_info[1]*0.3
+  }
+  else if(deliveries[i].volume>5){
+    truck_info[1] = truck_info[1] - truck_info[1]*0.1
+  }
+  // Second step
+  price[i] = deliveries[i].distance*truck_info[0]+deliveries[i].volume*truck_info[1]
+  // third step
+  // fourth step
+  if(deliveries[i].options.deductibleReduction)
+  {
+    price[i]= price[i]+deliveries[i].volume
+  }
+  var convargo = price[i]*0.3;
+  commission[i][0]=convargo*0.5;
+  commission[i][1]=Math.floor(deliveries[i].distance/500)
+  commission[i][2] = convargo - commission[i][0] - commission[i][1]
+  console.log(commission[i]);
+}
+
+function truck_price(truckid)
+{
+  for(var i=0;i<truckers.length;i++)
+  {
+    if(truckid == truckers[i].id)
+    {
+      return [truckers[i].pricePerKm,truckers[i].pricePerVolume];
+    }
+  }
+}
+
+console.log(price);
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
