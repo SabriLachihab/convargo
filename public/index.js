@@ -145,12 +145,13 @@ const actors = [{
   }]
 }];
 
-
 var price = [0,0,0];
 var commission = [[0,0,0],[0,0,0],[0,0,0]];
-for (var i=0;i<3;i++)
+var author = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+var id = [0,0,0];
+for (var i=0; i < deliveries.length;i++)
 {
-  var truck_info = truck_price(deliveries[i].truckerId)
+  var truck_info = truck_price(deliveries[i].truckerId,i)
   //first step
   if(deliveries[i].volume>25)
   {
@@ -165,30 +166,36 @@ for (var i=0;i<3;i++)
   // Second step
   price[i] = deliveries[i].distance*truck_info[0]+deliveries[i].volume*truck_info[1]
   // third step
+  var convargo = price[i]*0.3;
+  commission[i][0]=convargo*0.5;
+  commission[i][1]=Math.floor(deliveries[i].distance/500)+1
+  commission[i][2] = convargo - commission[i][0] - commission[i][1]
   // fourth step
   if(deliveries[i].options.deductibleReduction)
   {
     price[i]= price[i]+deliveries[i].volume
+    commission[i][2] = commission[i][2] + deliveries[i].volume
   }
-  var convargo = price[i]*0.3;
-  commission[i][0]=convargo*0.5;
-  commission[i][1]=Math.floor(deliveries[i].distance/500)
-  commission[i][2] = convargo - commission[i][0] - commission[i][1]
-  console.log(commission[i]);
+  author[i][0]=price[i]
+  author[i][1]=price[i]*0.7
+  author[i][2]=commission[i][0]
+  author[i][3]=commission[i][1]
+  author[i][4]=commission[i][2]
+  console.log("shipper : "+author[i][0]+" "+'\u20AC'+"\n"+
+            "owner : "+author[i][1]+" "+'\u20AC'+"\n"+
+            "insurance : "+author[i][2]+" "+'\u20AC'+"\n"+
+            "treasury : "+author[i][3]+" "+'\u20AC'+"\n"+
+            "convargo : "+author[i][4]+" "+'\u20AC');
 }
 
-function truck_price(truckid)
+function truck_price(truckid,key)
 {
   for(var i=0;i<truckers.length;i++)
   {
     if(truckid == truckers[i].id)
     {
+      id[key]=i;
       return [truckers[i].pricePerKm,truckers[i].pricePerVolume];
     }
   }
 }
-
-console.log(price);
-console.log(truckers);
-console.log(deliveries);
-console.log(actors);
