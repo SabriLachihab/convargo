@@ -151,7 +151,7 @@ var author = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
 var id = [0,0,0];
 for (var i=0; i < deliveries.length;i++)
 {
-  var truck_info = truck_price(deliveries[i].truckerId,i)
+  var truck_info = truck_price(deliveries[i].truckerId, i)
   //first step
   if(deliveries[i].volume>25)
   {
@@ -186,6 +186,37 @@ for (var i=0; i < deliveries.length;i++)
             "insurance : "+author[i][2]+" "+'\u20AC'+"\n"+
             "treasury : "+author[i][3]+" "+'\u20AC'+"\n"+
             "convargo : "+author[i][4]+" "+'\u20AC');
+}
+
+update_actors(author)
+update_delivries(commission,price)
+console.log(deliveries);
+console.log(actors);
+
+function update_actors(author)
+{
+  for(var i=0;i<actors.length;i++)
+  {
+    for(var j=0;j<author[i].length;j++)
+    {
+      actors[i].payment[j].amount=author[i][j];
+    }
+  }
+}
+
+function update_delivries(com,price)
+{
+  for(var i=0;i<deliveries.length;i++)
+  {
+    for(var j=0;j<commission[i].length;j++)
+    {
+      deliveries[i].price = price[i];
+      deliveries[i].commission.insurance=com[i][0];
+      deliveries[i].commission.treasury=com[i][1];
+      deliveries[i].commission.convargo=com[i][2];
+
+    }
+  }
 }
 
 function truck_price(truckid,key)
